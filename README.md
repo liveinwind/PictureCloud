@@ -1,10 +1,10 @@
 # PictureCloud
 A small picture server springboot application
 
-##notify
+## notify
 default port: 8081
 
-##image files saving location 
+## image files saving location 
 
 the difference of URL between windwos and linux 
 
@@ -28,10 +28,10 @@ table named: imagesTable,
 # PictureCloud
 一个小型的图床服务器软件
 
-##注意
+## 注意
 默认端口：8081
 
-##图片保存路径
+## 图片保存路径
 
 注意linux和windows下URL的不同
 

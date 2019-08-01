@@ -14,14 +14,6 @@ import java.io.IOException;
  */
 public class ImgUtils {
 
-    //完整路径Direction，不能缺少最后的/
-    public static  String DefaultImageLocation = "/PictureCloud/Images/";
-    //for WINDOWS
-    //public static  String DefaultImageLocation = "D://PictureCloud/Images/";
-
-
-
-
 
 
     /**

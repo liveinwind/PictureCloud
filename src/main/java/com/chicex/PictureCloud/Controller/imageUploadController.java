@@ -1,5 +1,6 @@
 package com.chicex.PictureCloud.Controller;
 
+import com.chicex.PictureCloud.ApplicationStartUpConfig;
 import com.chicex.PictureCloud.Objects.ImageInfo;
 import com.chicex.PictureCloud.Service.ImageService;
 import com.chicex.PictureCloud.Utils.ImgUtils;
@@ -25,13 +26,13 @@ public class imageUploadController {
     ImageService imageService;
     @PostMapping(value = "/imageUpload")
     public @ResponseBody
-    String upload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sessionID",required = false) String sessionID) throws IOException {
+    com.chicex.PictureCloud.Objects.ResponseBody upload(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "sessionID",required = false) String sessionID) throws IOException {
         //获取服务器中保存文件的路径
         ImageInfo imageI = new ImageInfo();
         String imageKey = null;
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        String path = ImgUtils.DefaultImageLocation;
+        String path = ApplicationStartUpConfig.DefaultImageLocation;
         //System.out.println(path);
         //System.out.println(request.getContentType());
         //获取解析器
@@ -50,7 +51,7 @@ public class imageUploadController {
                 imageKey = imageI.createKey();
                 //System.out.println(fileName);
                 if(!ImageInfo.matchType(fileName.substring(fileName.lastIndexOf(".")+1))){
-                    return "not allow this type" + fileName;
+                    return new com.chicex.PictureCloud.Objects.ResponseBody(400,"not allow this type: " + fileName);
                 }//后缀名
                 String localPath = path + imageKey +"."+ fileName.substring(fileName.lastIndexOf(".")+1);
                 //创建一个新的文件对象，创建时需要一个参数，参数是文件所需要保存的位置
@@ -73,14 +74,14 @@ public class imageUploadController {
                 imageI.setImagekey(imageKey);
                 imageService.saveImage(imageI);
             }
-            return "/image/getImage/"+imageI.getImagekey()+"."+imageI.getType();
+            return new com.chicex.PictureCloud.Objects.ResponseBody(200,"/image/getImage/"+imageI.getImagekey()+"."+imageI.getType());
         }
-        return "failed";
+        return new com.chicex.PictureCloud.Objects.ResponseBody(400,"未知错误");
     }
     @RequestMapping("/getImage/{key}.{type}")
     public void getImage(@PathVariable String key,
                          @PathVariable String type,
-                         HttpServletResponse response){
+                         HttpServletResponse response)throws FileNotFoundException,IOException{
         ImageInfo info = imageService.getImage(key);
         ServletOutputStream out= null;
             out = response.getOutputStream();

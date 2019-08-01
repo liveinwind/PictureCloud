@@ -99,7 +99,6 @@ const api = {
     storage: {
         images: {
             list: '/ImagesManagement/list',
-            domain: '/storage/qiniu',
             upload: '/image/imageUpload',
             download() {
                 return '/image/getImage/' + name;
@@ -110,9 +109,6 @@ const api = {
             findOne(name) {
                 return '/ImagesManagement/findOne?imageKey=' + name
             },
-            updateOne(oldname, newname) {
-                return '' + newname;
-        },
     },
 },
     //系统监控

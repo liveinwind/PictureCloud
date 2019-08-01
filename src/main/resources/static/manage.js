@@ -6,6 +6,8 @@ let app = new Vue({
         searchEntity: {}, //查询实体类
         loading: true,
         createDialogVisible: false,
+        showProgress: false,
+        uploadPercent: 0,
         dataForm: {
             oldname: '',
             newname: '',
@@ -13,12 +15,9 @@ let app = new Vue({
         rules: {
             newname: [{required: true, message: '对象名称不能为空', trigger: 'blur'}]
         },
-
         updateDialogVisible: false,
-        mobileStatus: false, //是否是移动端
-        sidebarStatus: true, //侧边栏状态，true：打开，false：关闭
-        sidebarFlag: ' openSidebar ', //侧边栏标志
         dialogVisible: false,
+        sidebarFlag: false
     },
     created() {
         window.onload = function () {
@@ -83,19 +82,35 @@ let app = new Vue({
 
         //上传
         upload(item) {
-            console.log(item);
             const formData = new FormData();
             formData.append('file', item.file);
-            this.$http.post(api.storage.images.upload, formData).then(response => {
+            this.$http.post(api.storage.images.upload,formData,
+                {progress:function(event){
+                    app.progressFunction(event);
+                    }}).then(response => {
                 this.createDialogVisible = false;
-                if (response.body.code == 200) {
-                    this._notify(response, 'success')
+                if (response.body.code === 200) {
+                    this._notify(response.body.msg, 'success');
+                    item.file=null;
                 } else {
-                    this._notify(response, 'error')
+                    this._notify(response.body.msg, 'error')
                 }
                 this.search();
             })
         },
+    progressFunction(event){
+    // 设置进度显示
+        if(event.lengthComputable) {
+            this.showProgress=true;
+            var percent = Math.floor(event.loaded / event.total * 100);
+            if (percent > 100) {
+                percent = 100;
+            }
+            this.uploadPercent = percent;
+        }
+    },
+
+
 
         //触发更新按钮
         handleUpdate(name) {
@@ -143,34 +158,22 @@ let app = new Vue({
             var path ="http://"+domain+"/image/getImage/"+imageKey+"."+type;
             //window.clipboardData.setData("Text",path);
             //alert("已复制到剪贴板："+path);
-            this._notify("请手动复制复制链接： "+path,"success");
-            //window.open(path,'','',false);
+            //this._notify("请手动复制复制链接： "+path,"success");
+            window.open(path,'','',false);
         },
 
         /**
          * 监听窗口改变UI样式（区别PC和Phone）
          */
         changeDiv() {
-            let isMobile = this.isMobile();
-            if (isMobile) {
-                //手机访问
-                this.sidebarFlag = ' hideSidebar mobile ';
-                this.sidebarStatus = false;
-                this.mobileStatus = true;
-            } else {
-                this.sidebarFlag = ' openSidebar';
-                this.sidebarStatus = true;
-                this.mobileStatus = false;
-            }
+
         },
         isMobile() {
-            let rect = body.getBoundingClientRect();
-            return rect.width - RATIO < WIDTH
+
         },
         //蒙版
         drawerClick() {
-            this.sidebarStatus = false;
-            this.sidebarFlag = ' hideSidebar mobile '
+
         }
     },
 });

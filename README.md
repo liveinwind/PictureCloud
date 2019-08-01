@@ -78,7 +78,10 @@ spring.datasource.password=88888888
 
 # preview 预览
 
-![preview](http://pic.chicexcode.com/image/getImage/dd3a7fb31d7b8ca1fbd8b1457042737024629a0e.png "preview")
+![preview](http://pic.chicexcode.com/image/getImage/a5253c3fb3a23a2d419085848ee6037c48f77b1c.png "preview")
+
+
+![preview](http://pic.chicexcode.com/image/getImage/0832d2ce7a9b5fd067da757b1958cd2efcb1e579.png "preview")
 
 
 
